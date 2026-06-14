@@ -1,62 +1,162 @@
 const SHEET_URL =
   "https://docs.google.com/spreadsheets/d/e/2PACX-1vTJtkQfP0ltM9raiB_JGrxddm71y8GKJviu1QVjdEpY4QJOOX-4etAy0M_zblw5R2mEVtNKbHf-HSJN/pub?output=csv";
 
+const scheduleList = document.getElementById("schedule-list");
+
+const LOCAL_LOGOS = {
+  corpo: "assets/corpo.jpg",
+  heat: "assets/heat.jpg",
+  openspace: "assets/openspace.jpg",
+  open: "assets/openspace.jpg",
+  tempo: "assets/tempo.jpg"
+};
+
+function parseCsv(csv) {
+  const rows = [];
+  let current = "";
+  let row = [];
+  let inQuotes = false;
+
+  for (let i = 0; i < csv.length; i += 1) {
+    const char = csv[i];
+    const next = csv[i + 1];
+
+    if (char === '"' && next === '"') {
+      current += '"';
+      i += 1;
+    } else if (char === '"') {
+      inQuotes = !inQuotes;
+    } else if (char === "," && !inQuotes) {
+      row.push(current.trim());
+      current = "";
+    } else if ((char === "\n" || char === "\r") && !inQuotes) {
+      if (char === "\r" && next === "\n") i += 1;
+      row.push(current.trim());
+      if (row.some(Boolean)) rows.push(row);
+      row = [];
+      current = "";
+    } else {
+      current += char;
+    }
+  }
+
+  row.push(current.trim());
+  if (row.some(Boolean)) rows.push(row);
+
+  return rows;
+}
+
+function escapeHtml(value = "") {
+  return String(value).replace(/[&<>"']/g, character => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#39;"
+  }[character]));
+}
+
+function normalizeUrl(value = "") {
+  try {
+    return new URL(value).href;
+  } catch {
+    return "";
+  }
+}
+
+function localLogoFor(item, gym) {
+  const source = `${gym} ${item.handle} ${item.link}`.toLowerCase();
+  const match = Object.keys(LOCAL_LOGOS).find(key => source.includes(key));
+
+  return match ? LOCAL_LOGOS[match] : "";
+}
+
+function logoFor(item, gym) {
+  return localLogoFor(item, gym) || normalizeUrl(item.logo);
+}
+
+function initialsFor(value = "") {
+  return value
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map(word => word[0])
+    .join("")
+    .toUpperCase() || "G";
+}
+
+function renderStatus(message) {
+  scheduleList.innerHTML = `<p class="schedule-status">${escapeHtml(message)}</p>`;
+}
+
 async function loadSchedule() {
-  const response = await fetch(SHEET_URL);
-  const csv = await response.text();
+  if (!scheduleList) return;
 
-  const rows = csv.trim().split("\n").slice(1);
-  const grouped = {};
+  try {
+    const response = await fetch(SHEET_URL);
 
-  rows.forEach(row => {
-    const cols = row.split(",");
-
-    const gym = cols[0]?.trim();
-    const handle = cols[1]?.trim();
-    const classType = cols[2]?.trim();
-    const day = cols[3]?.trim();
-    const time = cols[4]?.trim();
-    const link = cols[5]?.trim();
-    const logo = cols[6]?.trim();
-    const active = cols[7]?.trim().toUpperCase();
-
-    if (active !== "TRUE") return;
-
-    if (!grouped[gym]) {
-      grouped[gym] = {
-        handle,
-        classType,
-        link,
-        logo,
-        times: []
-      };
+    if (!response.ok) {
+      throw new Error("Schedule request failed");
     }
 
-    grouped[gym].times.push(`${day} • ${time}`);
-  });
+    const csv = await response.text();
+    const rows = parseCsv(csv).slice(1);
+    const grouped = new Map();
 
-  const scheduleList = document.getElementById("schedule-list");
+    rows.forEach(cols => {
+      const [gym, handle, classType, day, time, link, logo, active] = cols;
 
-  scheduleList.innerHTML = Object.entries(grouped).map(([gym, item]) => `
-    <div class="schedule-card">
-      <div class="schedule-top">
-        <img src="${item.logo}" class="gym-logo" alt="${gym} logo">
+      if (!gym || active?.toUpperCase() !== "TRUE") return;
 
-        <div>
-          <p class="handle">${item.handle}</p>
-          <h2>${gym}</h2>
-        </div>
-      </div>
+      if (!grouped.has(gym)) {
+        grouped.set(gym, {
+          handle,
+          classType,
+          link,
+          logo,
+          times: []
+        });
+      }
 
-      <p class="class-type">${item.classType}</p>
+      grouped.get(gym).times.push(`${day} • ${time}`);
+    });
 
-      <ul class="time-list">
-        ${item.times.map(time => `<li>${time}</li>`).join("")}
-      </ul>
+    if (!grouped.size) {
+      renderStatus("No active classes are listed right now. Check back soon.");
+      return;
+    }
 
-      <a href="${item.link}" target="_blank" class="btn">Open Instagram</a>
-    </div>
-  `).join("");
+    scheduleList.innerHTML = Array.from(grouped.entries()).map(([gym, item]) => {
+      const logo = logoFor(item, gym);
+      const logoClass = logo ? "" : " logo-failed";
+
+      return `
+        <article class="schedule-card">
+          <div class="schedule-top">
+            <div class="gym-logo-wrap${logoClass}">
+              <img src="${escapeHtml(logo)}" class="gym-logo" alt="${escapeHtml(gym)} logo" onerror="this.parentElement.classList.add('logo-failed')">
+              <span class="gym-logo-fallback" aria-hidden="true">${escapeHtml(initialsFor(gym))}</span>
+            </div>
+
+            <div>
+              <p class="handle">${escapeHtml(item.handle)}</p>
+              <h2>${escapeHtml(gym)}</h2>
+            </div>
+          </div>
+
+          <p class="class-type">${escapeHtml(item.classType)}</p>
+
+          <ul class="time-list">
+            ${item.times.map(time => `<li>${escapeHtml(time)}</li>`).join("")}
+          </ul>
+
+          <a href="${escapeHtml(normalizeUrl(item.link))}" target="_blank" rel="noopener noreferrer" class="btn">Open Instagram</a>
+        </article>
+      `;
+    }).join("");
+  } catch (error) {
+    renderStatus("The schedule could not load right now. Please try again soon.");
+  }
 }
 
 loadSchedule();

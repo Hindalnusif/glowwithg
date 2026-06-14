@@ -3,78 +3,114 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Glow With G</title>
+  <meta name="description" content="Glow With G offers Pilates, Lagree, sculpt, barre, and wellness movement by Ghina." />
+  <title>Glow With G | Pilates, Lagree & Wellness</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
 <header>
-  <a class="logo" href="index.html">
+  <a class="logo" href="index.html" aria-label="Glow With G home">
     <img src="assets/glow-logo.png" alt="Glow With G logo">
   </a>
 
-  <nav>
-    <a href="index.html">Home</a>
+  <nav aria-label="Main navigation">
+    <a href="index.html" aria-current="page">Home</a>
     <a href="schedule.html">Schedule</a>
     <a href="about.html">About</a>
-    <a href="shop.html">Shop</a>
+    <a href="shop.html" class="shop-nav">Shop</a>
   </nav>
 </header>
 
-<section class="hero">
-  <div>
-    <p class="tag">Pilates • Lagree • Wellness</p>
-    <h1>Train soft.<br>Feel strong.</h1>
-    <p class="intro">
-      Movement by Ghina — focused on strength, alignment, slow burn, and that post-class glow.
-    </p>
+<main>
+  <section class="hero home-hero">
+    <div class="hero-copy">
+      <p class="tag">Pilates • Lagree • Wellness</p>
+      <h1>Train soft.<br>Feel strong.</h1>
 
-    <div class="buttons">
-      <a href="schedule.html" class="btn">View Schedule</a>
-      <a href="about.html" class="btn secondary">Meet Ghina</a>
-    </div>
-  </div>
+      <p class="intro">
+        Movement by Ghina, focused on strength, alignment, slow burn, and that post-class glow.
+      </p>
 
-  <div class="hero-card">
-    <img src="assets/glow-logo.png" alt="Glow With G logo">
-    <p>Reformer • Mat • Sculpt • Barre • Lagree</p>
-  </div>
-</section>
-
-<section class="section">
-  <p class="tag">The Glow Method</p>
-  <h2>Low-impact movement, high-intention energy.</h2>
-
-  <div class="grid-section">
-    <div class="card">
-      <p class="number">01</p>
-      <h3>Strength</h3>
-      <p>Slow, controlled classes designed to build deep strength without the chaos.</p>
+      <div class="buttons">
+        <a href="schedule.html" class="btn">View Schedule</a>
+        <a href="shop.html" class="btn secondary">Shop From Glo</a>
+      </div>
     </div>
 
-    <div class="card">
-      <p class="number">02</p>
-      <h3>Alignment</h3>
-      <p>Focused movement that supports posture, balance, and body awareness.</p>
+    <div class="hero-card logo-card">
+      <img src="assets/glow-logo.png" alt="Glow With G logo">
+      <p>Reformer • Mat • Sculpt • Barre • Lagree</p>
     </div>
+  </section>
 
-    <div class="card">
-      <p class="number">03</p>
-      <h3>Consistency</h3>
-      <p>A softer approach to discipline — effective, clean, and actually sustainable.</p>
+  <section class="studio-strip" aria-label="Studio partners">
+    <p class="tag">Where to glow</p>
+    <div class="studio-track">
+      <div class="studio-logo"><img src="assets/tempo.jpg" alt="Tempo studio"></div>
+      <div class="studio-logo"><img src="assets/heat.jpg" alt="Heat studio"></div>
+      <div class="studio-logo"><img src="assets/openspace.jpg" alt="OpenSpace studio"></div>
+      <div class="studio-logo"><img src="assets/corpo.jpg" alt="Corpo studio"></div>
+      <div class="studio-logo"><img src="assets/tempo.jpg" alt="Tempo studio"></div>
+      <div class="studio-logo"><img src="assets/heat.jpg" alt="Heat studio"></div>
+      <div class="studio-logo"><img src="assets/openspace.jpg" alt="OpenSpace studio"></div>
+      <div class="studio-logo"><img src="assets/corpo.jpg" alt="Corpo studio"></div>
+      <div class="studio-logo"><img src="assets/tempo.jpg" alt="Tempo studio"></div>
+      <div class="studio-logo"><img src="assets/heat.jpg" alt="Heat studio"></div>
+      <div class="studio-logo"><img src="assets/openspace.jpg" alt="OpenSpace studio"></div>
+      <div class="studio-logo"><img src="assets/corpo.jpg" alt="Corpo studio"></div>
+      <div class="studio-logo"><img src="assets/tempo.jpg" alt="Tempo studio"></div>
+      <div class="studio-logo"><img src="assets/heat.jpg" alt="Heat studio"></div>
+      <div class="studio-logo"><img src="assets/openspace.jpg" alt="OpenSpace studio"></div>
+      <div class="studio-logo"><img src="assets/corpo.jpg" alt="Corpo studio"></div>
     </div>
-  </div>
-</section>
+  </section>
 
-<section class="shop-preview">
-  <p class="tag">From Glo</p>
-  <h2>Workout wardrobe, but make it cute.</h2>
-  <p>Shop movement pieces made for class, layering, errands, and everyday glow energy.</p>
-  <a href="shop.html" class="btn secondary">Shop From Glo</a>
-</section>
+  <section class="statement">
+    <p>Movement should feel strong, intentional, and sustainable.</p>
+  </section>
+
+  <section class="section">
+    <p class="tag">The Glow Method</p>
+    <h2>Low-impact movement, high-intention energy.</h2>
+
+    <div class="grid-section">
+      <article class="card">
+        <p class="number">01</p>
+        <h3>Strength</h3>
+        <p>Slow, controlled classes designed to build deep strength without the chaos.</p>
+      </article>
+
+      <article class="card">
+        <p class="number">02</p>
+        <h3>Alignment</h3>
+        <p>Focused movement that supports posture, balance, and body awareness.</p>
+      </article>
+
+      <article class="card">
+        <p class="number">03</p>
+        <h3>Consistency</h3>
+        <p>A softer approach to discipline: effective, clean, and sustainable.</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="shop-preview">
+    <div>
+      <p class="tag">From Glo</p>
+      <h2>Workout wardrobe, but make it cute.</h2>
+      <p>Shop movement pieces made for class, layering, errands, and everyday glow energy.</p>
+    </div>
+    <a href="shop.html" class="btn">Shop From Glo</a>
+  </section>
+</main>
 
 <footer>
   <p>© 2026 Glow With G</p>
+  <div class="footer-links">
+    <a href="https://www.instagram.com/glowwithg__/" target="_blank" rel="noopener noreferrer">@glowwithg__</a>
+    <a href="https://fromglo.com/" target="_blank" rel="noopener noreferrer">From Glo</a>
+  </div>
 </footer>
 
 </body>
